@@ -1,10 +1,15 @@
 from setuptools import setup, find_packages
 
 setup(
-    name="compagnon",
+    name="compagnon-smol",
     version="0.0.1",
     packages=find_packages(),
     install_requires=[
-        "pydantic-ai>=0.0.17",
+        "smolagents>=1.0.0",
+        "pydantic>=2.9.2",
+        "fastapi>=0.115.2",
+        "pillow>=11.0.0",
+        "packaging>=23.2",
+        "pgvector>=0.3.5",
     ],
 )

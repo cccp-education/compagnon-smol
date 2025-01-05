@@ -1,1 +1,4 @@
 .env
+*.iml
+.idea
+config.py

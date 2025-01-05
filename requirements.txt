@@ -1,1 +1,1 @@
-pydantic-ai==0.0.17
+smolagents==1.0.0
