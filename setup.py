@@ -11,5 +11,8 @@ setup(
         "pillow>=11.0.0",
         "packaging>=23.2",
         "pgvector>=0.3.5",
+        "PyMonad>=2.4.0",
+        "PyYAML~=6.0.1",
+        "setuptools~=74.1.2"
     ],
 )
