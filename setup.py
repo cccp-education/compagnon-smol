@@ -15,6 +15,7 @@ setup(
         "PyYAML~=6.0.1",
         "setuptools~=74.1.2",
         "huggingface-hub>=0.28.1",
-        "assertpy>=1.1"
+        "assertpy>=1.1",
+        "pytest>=8.3.4",
     ],
 )

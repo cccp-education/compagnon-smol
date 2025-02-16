@@ -5,20 +5,23 @@ import os
 from assertpy import assert_that
 
 from config import (CODESTRAL_API_KEY, HUGGINGFACE_API_KEY,
-                    GOOGLE_API_KEY, MISTRAL_API_KEY)
+                    GOOGLE_API_KEY, MISTRAL_API_KEY,
+                    SMOLLM2_MODEL)
 
 ENV = {
     "HUGGINGFACE_API_KEY": HUGGINGFACE_API_KEY,
     "GOOGLE_API_KEY": GOOGLE_API_KEY,
     "MISTRAL_API_KEY": MISTRAL_API_KEY,
     "CODESTRAL_API_KEY": CODESTRAL_API_KEY,
+    "SMOLLM2_MODEL": SMOLLM2_MODEL
 }
 
 HF_TOKEN = ENV["HUGGINGFACE_API_KEY"]
+smollmInstruct = ENV["SMOLLM2_MODEL"]
 
 talk = {
-    'greetings': "Bonjour le monde!",
-    'topic': """Le sujet qui m'intéresse ce sont les LLMs(Large Language Model) et les agents."""
+    "greetings": "Bonjour le monde!",
+    "topic": """Le sujet qui m'intéresse ce sont les LLMs(Large Language Model) et les agents."""
 }
 
 

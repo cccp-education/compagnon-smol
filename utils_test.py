@@ -1,15 +1,13 @@
 # -*- coding: utf-8 -*-
 
 import os
-import unittest
-from unittest import TestCase
 
 from assertpy import assert_that
 
 from utils import clear_environment, ENV, set_environment
 
 
-class UtilsTests(TestCase):
+class TestUtils:
 
     @staticmethod
     def test_clear_environment():
@@ -22,6 +20,7 @@ class UtilsTests(TestCase):
         assert_that(os.environ).contains_value("bar")
         clear_environment({"foo": "bar"})
         assert_that(os.environ).is_not_empty()
+        assert_that(os.environ.items()).is_not_empty()
         assert_that(os.environ.keys()).does_not_contain("foo")
         assert_that(os.environ.values()).does_not_contain("bar")
 
@@ -45,7 +44,3 @@ class UtilsTests(TestCase):
             lambda key: os.environ[key] == ENV[key], ENV.keys()
         ))).is_equal_to([True] * len(ENV))
         clear_environment(ENV)
-
-
-if __name__ == '__main__':
-    unittest.main()

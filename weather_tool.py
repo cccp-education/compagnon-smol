@@ -2,7 +2,7 @@
 
 from huggingface_hub import InferenceClient
 
-from utils import set_environment
+from utils import set_environment, smollmInstruct
 
 
 def get_weather(location):
@@ -12,34 +12,7 @@ def get_weather(location):
 if __name__ == '__main__':
     set_environment()
 
-    client = InferenceClient("HuggingFaceTB/SmolLM2-1.7B-Instruct")
-
-    output = client.text_generation(
-        "The capital of france is",
-        max_new_tokens=100,
-    )
-
-    print(output)
-
-    prompt = """<|begin_of_text|><|start_header_id|>user<|end_header_id|>
-    The capital of Paris is<|eot_id|><|start_header_id|>assistant<|end_header_id|>
-    """
-    output = client.text_generation(
-        prompt,
-        max_new_tokens=100,
-    )
-
-    print(output)
-
-    output = client.chat.completions.create(
-        messages=[
-            {"role": "user", "content": "The capital of france is"},
-        ],
-        stream=False,
-        max_tokens=1024,
-    )
-
-    print(output.choices[0].message.content)
+    client = InferenceClient(smollmInstruct)
 
     SYSTEM_PROMPT = """Answer the following questions as best you can. You have access to the following tools:
     
@@ -81,11 +54,10 @@ if __name__ == '__main__':
     What's the weather in London ?
     <|eot_id|><|start_header_id|>assistant<|end_header_id|>
     """
+
     print(prompt)
-    output = client.text_generation(
-        prompt,
-        max_new_tokens=200,
-    )
+
+    output = client.text_generation(prompt, max_new_tokens=200)
 
     print(output)
 
@@ -101,4 +73,5 @@ if __name__ == '__main__':
     get_weather('London')
 
     new_prompt = prompt + output + get_weather('London')
-    # print(new_prompt)
+
+    print(new_prompt)
