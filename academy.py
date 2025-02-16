@@ -1,30 +1,8 @@
 import json
-import os
-from typing import Dict, Set
 
 import yaml
-from pydantic import BaseModel, Field
+from pydantic import BaseModel
 from pymonad.either import Right, Left, Either
-
-from config import (CODESTRAL_API_KEY,
-                    LANGCHAIN_TRACING_V2,
-                    HUGGINGFACE_API_KEY,
-                    GOOGLE_API_KEY,
-                    MISTRAL_API_KEY)
-
-ASSISTANT_ENV = {
-    "HUGGINGFACE_API_KEY": HUGGINGFACE_API_KEY,
-    "GOOGLE_API_KEY": GOOGLE_API_KEY,
-    "MISTRAL_API_KEY": MISTRAL_API_KEY,
-    "CODESTRAL_API_KEY": CODESTRAL_API_KEY,
-    "LANGCHAIN_TRACING_V2": LANGCHAIN_TRACING_V2,
-}
-
-
-def set_environment():
-    diff = {key: value for key, value in ASSISTANT_ENV.items() if key not in os.environ}
-    if len(diff) > 0:
-        os.environ.update(diff)
 
 
 class SPGData:
@@ -92,6 +70,8 @@ class SPD(BaseModel):
 
 
 """Scénario Pédagogique Global"""
+
+
 class SPG(BaseModel):
     # theme: Dict[str, str] = Field(default_factory=lambda: {SPGData.THEME_CAPTION: ""})
     # theme: Dict[str, str] = Field(default_factory=lambda: {SPGData.THEME_CAPTION: ""})
@@ -148,6 +128,7 @@ class SPG(BaseModel):
 class Training(BaseModel):
     """Training model containing SPG and optional SPDs"""
     spg: SPG
+
     # spds: Set[SPD] = Field(default_factory=set)
 
     def to_yaml(self) -> Either[Exception, str]:
