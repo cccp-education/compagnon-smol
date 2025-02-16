@@ -17,5 +17,6 @@ setup(
         "huggingface-hub>=0.28.1",
         "assertpy>=1.1",
         "pytest>=8.3.4",
+        "pytest-asyncio>=0.25.3",
     ],
 )

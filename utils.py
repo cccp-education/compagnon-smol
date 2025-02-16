@@ -17,7 +17,7 @@ ENV = {
 }
 
 HF_TOKEN = ENV["HUGGINGFACE_API_KEY"]
-smollmInstruct = ENV["SMOLLM2_MODEL"]
+smollm_instruct_model = ENV["SMOLLM2_MODEL"]
 
 talk = {
     "greetings": "Bonjour le monde!",
@@ -25,8 +25,8 @@ talk = {
 }
 
 
-def set_environment():
-    diff = {key: value for key, value in ENV.items() if key not in os.environ}
+def set_environment(env_vars):
+    diff = {key: value for key, value in env_vars.items() if key not in os.environ}
     if len(diff) > 0: os.environ.update(diff)
 
 

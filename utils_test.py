@@ -28,7 +28,7 @@ class TestUtils:
     def test_set_environment_loop_impl():
         for key, value in ENV.items():
             assert_that(os.environ).does_not_contain(key)
-        set_environment()
+        set_environment(ENV)
         for key, value in ENV.items():
             assert_that(os.environ).contains_key(key)
             assert_that(os.environ[key]).is_equal_to(value)
@@ -39,7 +39,7 @@ class TestUtils:
         assert_that(list(map(
             lambda key: key in os.environ, ENV.keys()
         ))).is_equal_to([False] * len(ENV))
-        set_environment()
+        set_environment(ENV)
         assert_that(list(map(
             lambda key: os.environ[key] == ENV[key], ENV.keys()
         ))).is_equal_to([True] * len(ENV))
