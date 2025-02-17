@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+
+
 from __future__ import annotations
 
 import asyncio
@@ -8,7 +10,7 @@ from huggingface_hub import InferenceClient, ChatCompletionOutput, ChatCompletio
 
 from utils import set_environment, ENV, smollm_instruct_model
 
-
+# noinspection PyShadowingNames
 def blocking_text_generation(client: InferenceClient, prompt: str) -> str:
     return client.text_generation(
         prompt,
@@ -16,6 +18,7 @@ def blocking_text_generation(client: InferenceClient, prompt: str) -> str:
         temperature=0.98)
 
 
+# noinspection PyShadowingNames
 async def text_generation(client: InferenceClient, prompt: str):
     for chunk in client.text_generation(
             prompt,
@@ -25,6 +28,7 @@ async def text_generation(client: InferenceClient, prompt: str):
         print(chunk, end='', flush=True)
 
 
+# noinspection PyShadowingNames
 def blocking_chat_completion(
         client: InferenceClient,
         prompt: str) -> ChatCompletionOutput | Iterable[ChatCompletionStreamOutput]:
@@ -35,6 +39,7 @@ def blocking_chat_completion(
     )
 
 
+# noinspection PyShadowingNames
 async def chat_completion(
         client: InferenceClient,
         prompt: str) -> ChatCompletionOutput | Iterable[ChatCompletionStreamOutput]:
@@ -45,6 +50,7 @@ async def chat_completion(
     )
 
 
+# noinspection PyShadowingNames
 async def display_chat_completion(
         client: InferenceClient,
         prompt: str):
