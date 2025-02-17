@@ -9,18 +9,14 @@ from huggingface_hub import InferenceClient, ChatCompletionOutput, ChatCompletio
 from utils import set_environment, ENV, smollm_instruct_model
 
 
-def blocking_text_generation(
-        client: InferenceClient,
-        prompt: str) -> str:
+def blocking_text_generation(client: InferenceClient, prompt: str) -> str:
     return client.text_generation(
         prompt,
         max_new_tokens=100,
         temperature=0.98)
 
 
-async def text_generation(
-        client: InferenceClient,
-        prompt: str):
+async def text_generation(client: InferenceClient, prompt: str):
     for chunk in client.text_generation(
             prompt,
             max_new_tokens=100,
