@@ -4,7 +4,7 @@ from huggingface_hub import InferenceClient
 from pytest import fixture
 from pytest import mark
 
-from country_capital_prompt import blocking_text_generation, blocking_chat_completion, text_generation
+from country_capital_prompt import blocking_text_generation, blocking_chat_completion, chat_completion
 from utils import smollm_instruct_model, set_environment, clear_environment, ENV
 
 mark.asyncio
@@ -40,9 +40,7 @@ class TestCountryCapitalPrompt:
     # noinspection PyUnusedLocal
     @staticmethod
     def test_run_blocking_chat_completion(env_setup, client, prompt):
-        result = (blocking_chat_completion(
-            client,
-            prompt)
+        result = (blocking_chat_completion(client, prompt)
                   .choices[0]
                   .message.content)
         assert_that(result).is_type_of(str)
@@ -54,20 +52,12 @@ class TestCountryCapitalPrompt:
     @staticmethod
     @mark.asyncio
     async def test_run_text_generation(env_setup, client, prompt):
-        # Capture la sortie standard pour vérifier le texte généré
-        import sys
-        from io import StringIO
-
-        # Rediriger stdout dans un buffer
-        stdout = StringIO()
-        sys.stdout = stdout
-
-        # Exécuter la fonction asynchrone
-        await text_generation(client, prompt)
-
-        # Restaurer stdout
-        sys.stdout = sys.__stdout__
-
-        # Récupérer la sortie capturée
-        output = stdout.getvalue()
-        assert_that(output).contains_ignoring_case("Paris")
+        result = ""
+        try:
+            for chunk in await chat_completion(client, prompt):
+                content = chunk.choices[0].delta.content or ""
+                result += content
+                print(content, end='', flush=True)
+        except Exception as e:
+            assert_that(e).is_none()
+        assert_that(result).contains_ignoring_case("Paris")
