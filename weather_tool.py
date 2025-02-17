@@ -2,7 +2,7 @@
 
 from huggingface_hub import InferenceClient
 
-from utils import set_environment, smollm_instruct_model
+from utils import set_environment, smollm_model
 
 
 def get_weather(location):
@@ -12,7 +12,7 @@ def get_weather(location):
 if __name__ == '__main__':
     set_environment()
 
-    client = InferenceClient(smollm_instruct_model)
+    client = InferenceClient(smollm_model)
 
     SYSTEM_PROMPT = """Answer the following questions as best you can. You have access to the following tools:
     
