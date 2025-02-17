@@ -18,5 +18,6 @@ setup(
         "assertpy>=1.1",
         "pytest>=8.3.4",
         "pytest-asyncio>=0.25.3",
+        "loguru>=0.7.3"
     ],
 )
