@@ -4,9 +4,10 @@ import os
 
 from assertpy import assert_that
 
-from config import (CODESTRAL_API_KEY, HUGGINGFACE_API_KEY,
-                    GOOGLE_API_KEY, MISTRAL_API_KEY,
-                    SMOLLM2_MODEL)
+from config import (
+    CODESTRAL_API_KEY, HUGGINGFACE_API_KEY,
+    GOOGLE_API_KEY, MISTRAL_API_KEY,
+    SMOLLM2_MODEL)
 
 ENV = {
     "HUGGINGFACE_API_KEY": HUGGINGFACE_API_KEY,
@@ -18,12 +19,6 @@ ENV = {
 
 HF_TOKEN = ENV["HUGGINGFACE_API_KEY"]
 smollm_instruct_model = ENV["SMOLLM2_MODEL"]
-
-talk = {
-    "greetings": "Bonjour le monde!",
-    "topic": """Le sujet qui m'intéresse ce sont les LLMs(Large Language Model) et les agents."""
-}
-
 
 def set_environment(env_vars):
     diff = {key: value for key, value in env_vars.items() if key not in os.environ}

@@ -68,11 +68,8 @@ class SPD(BaseModel):
         except Exception as e:
             return Left(e)
 
-
-"""Scénario Pédagogique Global"""
-
-
 class SPG(BaseModel):
+    """Scénario Pédagogique Global"""
     # theme: Dict[str, str] = Field(default_factory=lambda: {SPGData.THEME_CAPTION: ""})
     # theme: Dict[str, str] = Field(default_factory=lambda: {SPGData.THEME_CAPTION: ""})
     # title: Dict[str, str] = Field(default_factory=lambda: {SPGData.TITLE_CAPTION: ""})
