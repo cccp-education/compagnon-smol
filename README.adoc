@@ -1,0 +1,56 @@
+= compagnon-smol
+
+This project is based on the [Smol Agents](https://github.com/hwchase17/smol-agents) course/examples by Harrison
+Chase (Hugging Face). It implements a simplified agent framework for experimenting with language models and aut
+onomous behavior.
+
+== Description
+
+This project is a modified version of the Smol Agents course. It adapts the framework to interact with internal Block APIs and services, focusing on practical applications within the Block ecosystem.
+
+== Key Files
+
+*   `academy.py`: This file defines the core agent logic and the environment in which the agent operates. It includes the task definition, planning, and execution steps.
+*   `calculator_tool.py`: This file implements a tool that allows the agent to perform calculations using a Python interpreter.
+*   `config.py`: This file contains configuration settings for the agent, such as API keys, model parameters, and other environment-specific variables.
+*   `utils.py`: This file provides utility functions and helper classes used throughout the project, such as text processing, data handling, and API interaction.
+*   `weather_tool.py`: This file implements a tool that allows the agent to retrieve weather information for a given location using a weather API.
+
+== Dependencies
+
+This project's dependencies are listed in `requirements.txt`.
+
+== Installation
+
+1.  Clone the repository:
+
+    ```bash
+    git clone https://github.com/your-username/compagnon-smol.git
+    ```
+2.  Install the required dependencies:
+
+    ```bash
+    pip install -r requirements.txt
+    ```
+
+== Usage
+
+To run the agent, execute the `main.py` script with the desired task as a command-line argument.  Ensure you have set the necessary API keys in `config.py`.
+
+For example:
+
+```bash
+python main.py --task "Find the current price of Square stock"
+```
+
+== Testing
+
+The project uses the `pytest` framework. Tests are located in the `tests/` directory. To run the tests, use the command `pytest` from the project root directory.
+
+== Contributing
+
+Contributions are welcome! Please submit a pull request with your changes.
+
+== License
+
+MIT License

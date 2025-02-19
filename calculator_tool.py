@@ -1,11 +1,6 @@
 # -*- coding: utf-8 -*-
 from smolagents import tool
 
-
-# class SmollAgentsToolError(Exception):
-#     """Exception raised for errors in the SmollAgents tools."""
-#     pass
-
 @tool
 def plus(a: int, b: int) -> int:
     """Sum two numbers.
