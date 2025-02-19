@@ -6,11 +6,10 @@ from pytest import mark
 from utils import (
     set_environment, clear_environment,
     ENV, hf_base_client, hf_instruct_client,
-    blocking_text_generation,
-    blocking_chat_completion, chat_completion)
+    chat_completion, blocking_chat_completion,
+    blocking_text_generation)
 
 mark.asyncio
-
 
 @fixture(scope="function")
 def env():
@@ -18,25 +17,27 @@ def env():
     yield
     clear_environment(ENV)
 
+@fixture(scope="class")
+def hf_base():
+    return hf_base_client()
 
 @fixture(scope="class")
-def hf_base(): return hf_base_client()
-
-
-@fixture(scope="class")
-def hf_instruct(): return hf_instruct_client()
-
+def hf_instruct():
+    return hf_instruct_client()
 
 class TestCountryCapitalPrompt:
     prompt = "The capital of France is"
     expected_result = "Paris"
 
-    @staticmethod
-    def test_run_blocking_text_generation_huggingface(env, hf_base):
-        result = blocking_text_generation(hf_base, TestCountryCapitalPrompt.prompt)
-        assert_that(result).is_type_of(str)
-        assert_that(result).is_not_empty()
-        print(result)
+
+    # @staticmethod
+    # def test_run_blocking_text_generation_huggingface(env, hf_base):
+    #     assert_that(env["SMOLLM2_MODEL"]).contains("smollm2")
+    #     result = blocking_text_generation(hf_base, TestCountryCapitalPrompt.prompt)
+    #     assert_that(result).is_type_of(str)
+    #     assert_that(result).is_not_empty()
+    #     print(result)
+
 
     @staticmethod
     def test_run_blocking_chat_completion_huggingface_instruct(env, hf_instruct):

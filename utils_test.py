@@ -4,8 +4,7 @@ import os
 
 from assertpy import assert_that
 from huggingface_hub import InferenceClient
-from pytest import fixture
-from pytest import mark
+from pytest import fixture, mark
 
 from utils import (
     set_environment, clear_environment,
@@ -14,22 +13,23 @@ from utils import (
 mark.asyncio
 
 
-@fixture(scope="function")
-def env():
-    set_environment(ENV)
-    yield
-    clear_environment(ENV)
-
-
-@fixture(scope="class")
-def hf_base() -> InferenceClient: return hf_base_client()
-
-
-@fixture(scope="class")
-def hf_instruct() -> InferenceClient: return hf_instruct_client()
-
-
 class TestUtils:
+    @staticmethod
+    @fixture(scope="function")
+    def env():
+        set_environment(ENV)
+        yield
+        clear_environment(ENV)
+
+    @staticmethod
+    @fixture(scope="class")
+    def hf_base() -> InferenceClient:
+        return hf_base_client()
+
+    @staticmethod
+    @fixture(scope="class")
+    def hf_instruct() -> InferenceClient:
+        return hf_instruct_client()
 
     @staticmethod
     def test_clear_environment():
