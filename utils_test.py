@@ -3,15 +3,13 @@
 import os
 
 from assertpy import assert_that
-
+from huggingface_hub import InferenceClient
 from pytest import fixture
 from pytest import mark
 
 from utils import (
     set_environment, clear_environment,
-    ENV, hf_base_client, hf_instruct_client,
-    blocking_text_generation,
-    blocking_chat_completion, chat_completion)
+    ENV, hf_base_client, hf_instruct_client)
 
 mark.asyncio
 
@@ -24,12 +22,11 @@ def env():
 
 
 @fixture(scope="class")
-def hf_base(): return hf_base_client()
+def hf_base() -> InferenceClient: return hf_base_client()
 
 
 @fixture(scope="class")
-def hf_instruct(): return hf_instruct_client()
-
+def hf_instruct() -> InferenceClient: return hf_instruct_client()
 
 
 class TestUtils:
@@ -69,7 +66,3 @@ class TestUtils:
             lambda key: os.environ[key] == ENV[key], ENV.keys()
         ))).is_equal_to([True] * len(ENV))
         clear_environment(ENV)
-
-    @staticmethod
-    def test_base_model_dont_support_templated_prompt():
-        print("proov it!")
