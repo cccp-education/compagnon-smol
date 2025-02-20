@@ -2,7 +2,7 @@
 from __future__ import annotations
 
 import os
-from typing import Iterable
+from typing import Iterable, Dict
 
 from assertpy import assert_that
 from huggingface_hub import (
@@ -13,25 +13,27 @@ from loguru import logger
 from config import (
     CODESTRAL_API_KEY, HUGGINGFACE_API_KEY,
     GOOGLE_API_KEY, MISTRAL_API_KEY,
-    SMOLLM2_MODEL, SMOLLM2_INSTRUCT_MODEL)
+    SMOLLM2_MODEL, SMOLLM2_INSTRUCT_MODEL, LLAMA_3_2_INSTRUCT_MODEL)
 
 logger.add("sys.stdout", level="INFO")
 
-ENV = {
+ENV: Dict[str, str] = {
     "HUGGINGFACE_API_KEY": HUGGINGFACE_API_KEY,
     "GOOGLE_API_KEY": GOOGLE_API_KEY,
     "MISTRAL_API_KEY": MISTRAL_API_KEY,
     "CODESTRAL_API_KEY": CODESTRAL_API_KEY,
     "SMOLLM2_MODEL": SMOLLM2_MODEL,
-    "SMOLLM2_INSTRUCT_MODEL": SMOLLM2_INSTRUCT_MODEL
+    "SMOLLM2_INSTRUCT_MODEL": SMOLLM2_INSTRUCT_MODEL,
+    "LLAMA_3_2_INSTRUCT_MODEL": LLAMA_3_2_INSTRUCT_MODEL
 }
 
 HF_TOKEN = ENV["HUGGINGFACE_API_KEY"]
 smollm_model = ENV["SMOLLM2_MODEL"]
 smollm_instruct_model = ENV["SMOLLM2_INSTRUCT_MODEL"]
+llama_instruct_model = ENV["LLAMA_3_2_INSTRUCT_MODEL"]
 
 
-def set_environment(env_vars):
+def set_environment(env_vars) -> None:
     diff = {key: value for key, value in env_vars.items() if key not in os.environ}
     if len(diff) > 0:
         os.environ.update(diff)
@@ -50,6 +52,11 @@ def clear_environment(env_vars):
 def hf_instruct_client() -> InferenceClient:
     logger.debug("Creating Hugging Face instruct client.")
     return InferenceClient(smollm_instruct_model)
+
+
+def llama_instruct_client() -> InferenceClient:
+    logger.debug("Creating Llama3.2 instruct client.")
+    return InferenceClient(llama_instruct_model)
 
 
 def hf_base_client() -> InferenceClient:
@@ -106,6 +113,7 @@ async def chat_completion(
         max_tokens=1024,
     )
 
+
 # noinspection PyShadowingNames
 async def display_chat_completion(
         client: InferenceClient,
@@ -116,6 +124,27 @@ async def display_chat_completion(
         flush=True
     )
 
+def tool_to_hf_format(tool_class):
+    """Convertit une classe SmoLAgents Tool en format compatible HuggingFace."""
+    properties = {}
+    required = []
+
+    for name, type_hint in tool_class.inputs:
+        properties[name] = {"type": type_hint}
+        required.append(name)
+
+    return {
+        "type": "function",
+        "function": {
+            "name": tool_class.name,
+            "description": tool_class.description,
+            "parameters": {
+                "type": "object",
+                "properties": properties,
+                "required": required
+            }
+        }
+    }
 
 # TODO: Add connection
 def gemini_client():

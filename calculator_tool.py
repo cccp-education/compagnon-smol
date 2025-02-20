@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
-from smolagents import tool
 
-@tool
+from smolagents import Tool
+
+
 def plus(a: int, b: int) -> int:
     """Sum two numbers.
 
@@ -19,7 +20,6 @@ def plus(a: int, b: int) -> int:
     return a + b
 
 
-@tool
 def multiply(a: int, b: int) -> int:
     """Multiply two numbers.
 
@@ -35,3 +35,20 @@ def multiply(a: int, b: int) -> int:
         6
     """
     return a * b
+
+
+class PlusTool(Tool):
+    name = "plus"
+    description = "Sum two numbers."
+    function = plus
+    inputs = [("a", "int"), ("b", "int")]
+    output_type = "int"
+
+
+class MultiplyTool(Tool):
+    name = "multiply",
+    description = "Multiply two numbers."
+    function = multiply,
+    inputs = [("a", "int"), ("b", "int")]
+    output_type = "int"
+

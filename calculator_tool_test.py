@@ -5,10 +5,11 @@ from huggingface_hub import InferenceClient
 from loguru import logger
 from pytest import fixture, mark
 
-from calculator_tool import multiply, plus
+from calculator_tool import (
+    multiply, plus, PlusTool, MultiplyTool)
 from utils import (
     set_environment, clear_environment,
-    ENV, hf_base_client, hf_instruct_client)
+    ENV, hf_base_client, hf_instruct_client, llama_instruct_client, tool_to_hf_format)
 
 mark.asyncio
 
@@ -30,6 +31,11 @@ def hf_instruct() -> InferenceClient:
     return hf_instruct_client()
 
 
+@fixture(scope="class")
+def llama_instruct() -> InferenceClient:
+    return llama_instruct_client()
+
+
 class TestCalculatorTool:
 
     @staticmethod
@@ -42,25 +48,25 @@ class TestCalculatorTool:
 
     @staticmethod
     def test_plus_tool_description():
-        logger.info(plus.description)
-        assert_that(plus.description).contains_ignoring_case("Sum two numbers.")
+        logger.info(f"Tool description: {PlusTool.description}")
+        (assert_that(PlusTool.description)
+         .contains_ignoring_case("Sum two numbers."))
 
     @staticmethod
     def test_multiply_tool_description():
-        logger.info(multiply.description)
-        assert_that(multiply.description).contains_ignoring_case("Multiply two numbers.")
+        logger.info(MultiplyTool.description)
+        assert_that(MultiplyTool.description).contains_ignoring_case("Multiply two numbers.")
 
-    # @staticmethod
-    # def test_plus_tool(hf_instruct):
-    #     set_environment(ENV)
-    #     result = hf_base_client().chat.completions.create(
-    #         messages=[{"role": "user", "content": "Calculate 2 + 2"}],
-    #         tools=[plus, multiply],
-    #         tool_choice="auto",
-    #         stream=False
-    #     )
-    #     logger.info(result)
-    #     clear_environment(ENV)
+    @staticmethod
+    def test_plus_tool(env, hf_instruct: InferenceClient):
+        logger.info(PlusTool.description)
+        result = hf_instruct.chat.completions.create(
+            messages=[{"role": "user", "content": "Calculate 2 + 2"}],
+            tools=[tool_to_hf_format(PlusTool),
+                   tool_to_hf_format(MultiplyTool)],
+            tool_choice="auto"
+        )
+        logger.info(f"Result: {result}")
 
     #     logger.info(multiply.to_string())
     # results = {}
