@@ -7,5 +7,3 @@ config.py
 venv
 sys.stdout
 .goose
-question.md
-code_review.adoc
