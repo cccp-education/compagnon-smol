@@ -64,7 +64,6 @@ class TestCalculatorTool:
             messages=[{"role": "user", "content": "Calculate 2 + 2"}],
             tools=[tool_to_hf_format(PlusTool),
                    tool_to_hf_format(MultiplyTool)],
-            # tools=[PlusTool, MultiplyTool],
             tool_choice="auto"
         )
         logger.info(f"Result: {result.choices[0].message.content}")
