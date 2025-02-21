@@ -10,27 +10,28 @@ from huggingface_hub import (
     InferenceClient)
 from loguru import logger
 
+from calculator_tool import calculator_tool_format, PlusTool, MultiplyTool
 from config import (
     CODESTRAL_API_KEY, HUGGINGFACE_API_KEY,
-    GOOGLE_API_KEY, MISTRAL_API_KEY,
-    SMOLLM2_MODEL, SMOLLM2_INSTRUCT_MODEL, LLAMA_3_2_INSTRUCT_MODEL)
+    GOOGLE_API_KEY, MISTRAL_API_KEY)
 
 logger.add("sys.stdout", level="INFO")
 
+HUGGINGFACE_API_ENV_KEY = "HUGGINGFACE_API_KEY"
+GOOGLE_API_ENV_KEY = "GOOGLE_API_KEY"
+MISTRAL_API_ENV_KEY = "MISTRAL_API_KEY"
+CODESTRAL_API_ENV_KEY = "CODESTRAL_API_KEY"
+llama_model = "meta-llama/Llama-3.2-3B"
+llama_instruct_model = "meta-llama/Llama-3.2-3B-Instruct"
+
 ENV: Dict[str, str] = {
-    "HUGGINGFACE_API_KEY": HUGGINGFACE_API_KEY,
-    "GOOGLE_API_KEY": GOOGLE_API_KEY,
-    "MISTRAL_API_KEY": MISTRAL_API_KEY,
-    "CODESTRAL_API_KEY": CODESTRAL_API_KEY,
-    "SMOLLM2_MODEL": SMOLLM2_MODEL,
-    "SMOLLM2_INSTRUCT_MODEL": SMOLLM2_INSTRUCT_MODEL,
-    "LLAMA_3_2_INSTRUCT_MODEL": LLAMA_3_2_INSTRUCT_MODEL
+    HUGGINGFACE_API_ENV_KEY: HUGGINGFACE_API_KEY,
+    GOOGLE_API_ENV_KEY: GOOGLE_API_KEY,
+    MISTRAL_API_ENV_KEY: MISTRAL_API_KEY,
+    CODESTRAL_API_ENV_KEY: CODESTRAL_API_KEY,
 }
 
-HF_TOKEN = ENV["HUGGINGFACE_API_KEY"]
-smollm_model = ENV["SMOLLM2_MODEL"]
-smollm_instruct_model = ENV["SMOLLM2_INSTRUCT_MODEL"]
-llama_instruct_model = ENV["LLAMA_3_2_INSTRUCT_MODEL"]
+HF_TOKEN = ENV[HUGGINGFACE_API_ENV_KEY]
 
 
 def set_environment(env_vars) -> None:
@@ -49,19 +50,14 @@ def clear_environment(env_vars):
     logger.debug(f"Environment variables cleared: {env_vars.keys()}")
 
 
-def hf_instruct_client() -> InferenceClient:
-    logger.debug("Creating Hugging Face instruct client.")
-    return InferenceClient(smollm_instruct_model)
-
-
 def llama_instruct_client() -> InferenceClient:
     logger.debug("Creating Llama3.2 instruct client.")
     return InferenceClient(llama_instruct_model)
 
 
-def hf_base_client() -> InferenceClient:
+def llama_client() -> InferenceClient:
     logger.debug("Creating Hugging Face base client.")
-    return InferenceClient(smollm_model)
+    return InferenceClient(llama_model)
 
 
 # noinspection PyShadowingNames
@@ -97,7 +93,6 @@ async def text_generation(client: InferenceClient, prompt: str):
             max_new_tokens=100,
             temperature=0.99,
             stream=True):
-        # print(chunk, end='', flush=True)
         logger.debug(f"Received chunk: {chunk}")  # Log each chunk
     logger.info("Streaming text generation finished.")
 
@@ -105,12 +100,16 @@ async def text_generation(client: InferenceClient, prompt: str):
 # noinspection PyShadowingNames
 async def chat_completion(
         client: InferenceClient,
-        prompt: str) -> ChatCompletionOutput | Iterable[ChatCompletionStreamOutput]:
+        prompt: str
+) -> ChatCompletionOutput | Iterable[ChatCompletionStreamOutput]:
     logger.info(f"Streaming chat completion started for prompt: {prompt}")
     return client.chat.completions.create(
         messages=[{"role": "user", "content": prompt}],
         stream=True,
         max_tokens=1024,
+        tools=[calculator_tool_format(PlusTool),
+               calculator_tool_format(MultiplyTool)],
+        tool_choice="auto",
     )
 
 
@@ -124,22 +123,6 @@ async def display_chat_completion(
         flush=True
     )
 
-def tool_to_hf_format(tool):
-    return {
-        "type": "function",
-        "function": {
-            "name": tool.name,  # changed to access the name attribute directly
-            "description": tool.description,
-            "parameters": {
-                "type": "object",
-                "properties": {
-                    "num1": {"type": "integer", "description": "The first number"},
-                    "num2": {"type": "integer", "description": "The second number"},
-                },
-                "required": ["num1", "num2"],
-            },
-        },
-    }
 
 # TODO: Add connection
 def gemini_client():

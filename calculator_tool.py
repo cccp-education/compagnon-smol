@@ -52,3 +52,22 @@ class MultiplyTool(Tool):
     inputs = [("a", "int"), ("b", "int")]
     output_type = "int"
 
+def calculator_tool_format(tool):
+    return {
+        "type": "function",
+        "function": {
+            "name": tool.name,
+            "description": tool.description,
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "num1": {"type": "integer", "description": "The first number"},
+                    "num2": {"type": "integer", "description": "The second number"},
+                },
+                "required": ["num1", "num2"],
+            },
+        },
+    }
+
+if __name__ == '__main__':
+    print(calculator_tool_format(PlusTool))
