@@ -124,26 +124,21 @@ async def display_chat_completion(
         flush=True
     )
 
-def tool_to_hf_format(tool_class):
-    """Convertit une classe SmoLAgents Tool en format compatible HuggingFace."""
-    properties = {}
-    required = []
-
-    for name, type_hint in tool_class.inputs:
-        properties[name] = {"type": type_hint}
-        required.append(name)
-
+def tool_to_hf_format(tool):
     return {
         "type": "function",
         "function": {
-            "name": tool_class.name,
-            "description": tool_class.description,
+            "name": tool.name,  # changed to access the name attribute directly
+            "description": tool.description,
             "parameters": {
                 "type": "object",
-                "properties": properties,
-                "required": required
-            }
-        }
+                "properties": {
+                    "num1": {"type": "integer", "description": "The first number"},
+                    "num2": {"type": "integer", "description": "The second number"},
+                },
+                "required": ["num1", "num2"],
+            },
+        },
     }
 
 # TODO: Add connection

@@ -46,9 +46,9 @@ class PlusTool(Tool):
 
 
 class MultiplyTool(Tool):
-    name = "multiply",
+    name = "multiply"
     description = "Multiply two numbers."
-    function = multiply,
+    function = multiply
     inputs = [("a", "int"), ("b", "int")]
     output_type = "int"
 
