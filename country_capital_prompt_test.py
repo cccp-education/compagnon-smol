@@ -37,8 +37,7 @@ class TestCountryCapitalPrompt:
     expected_result = "Paris"
 
     @staticmethod
-    def test_run_blocking_text_generation_huggingface(
-            env, hf_base: InferenceClient):
+    def test_run_blocking_text_generation_huggingface(env, hf_base: InferenceClient):
         logger.info(f"env.keys() : {ENV.keys()}")
         assert_that(ENV).contains_key("SMOLLM2_MODEL")
         result = blocking_text_generation(hf_base, TestCountryCapitalPrompt.prompt)
