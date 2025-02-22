@@ -2,12 +2,12 @@
 from __future__ import annotations
 
 import os
-from typing import Iterable, Dict
+from typing import Iterable, Dict, Optional, List
 
 from assertpy import assert_that
 from huggingface_hub import (
     ChatCompletionOutput, ChatCompletionStreamOutput,
-    InferenceClient)
+    InferenceClient, ChatCompletionInputTool)
 from loguru import logger
 
 from calculator_tool import calculator_tool_format, PlusTool, MultiplyTool
@@ -100,15 +100,15 @@ async def text_generation(client: InferenceClient, prompt: str):
 # noinspection PyShadowingNames
 async def chat_completion(
         client: InferenceClient,
-        prompt: str
+        prompt: str,
+        tools: Optional[List[ChatCompletionInputTool]] = None
 ) -> ChatCompletionOutput | Iterable[ChatCompletionStreamOutput]:
     logger.info(f"Streaming chat completion started for prompt: {prompt}")
     return client.chat.completions.create(
         messages=[{"role": "user", "content": prompt}],
         stream=True,
         max_tokens=1024,
-        tools=[calculator_tool_format(PlusTool),
-               calculator_tool_format(MultiplyTool)],
+        tools=tools,
         tool_choice="auto",
     )
 
