@@ -10,7 +10,6 @@ from huggingface_hub import (
     InferenceClient, ChatCompletionInputTool)
 from loguru import logger
 
-from calculator_tool import calculator_tool_format, PlusTool, MultiplyTool
 from config import (
     CODESTRAL_API_KEY, HUGGINGFACE_API_KEY,
     GOOGLE_API_KEY, MISTRAL_API_KEY)
