@@ -44,6 +44,9 @@ class PlusTool(Tool):
     inputs = [("a", "int"), ("b", "int")]
     output_type = "int"
 
+    def __call__(self, a: int, b: int) -> int:
+        return a + b
+
 
 class MultiplyTool(Tool):
     name = "multiply"
@@ -51,6 +54,8 @@ class MultiplyTool(Tool):
     function = multiply
     inputs = [("a", "int"), ("b", "int")]
     output_type = "int"
+    def __call__(self, a: int, b: int) -> int:
+        return a * b
 
 def calculator_tool_format(tool):
     return {
