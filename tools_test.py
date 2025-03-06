@@ -5,8 +5,7 @@ import os
 from assertpy import assert_that
 from huggingface_hub import InferenceClient, ChatCompletionOutput, ChatCompletionOutputMessage
 from loguru import logger
-from pytest import fixture
-from pytest import mark
+from pytest import fixture, mark
 
 from calculator_tool import multiply, plus, PlusTool, MultiplyTool, calculator_tool_format
 from utils import (
@@ -16,6 +15,7 @@ from utils import (
     llama_client, llama_instruct_client)
 
 mark.asyncio
+
 
 class TestTools:
     prompt = "The capital of France is"
@@ -158,16 +158,14 @@ class TestTools:
         assert_that(result.model).is_equal_to(instruct.model)
         logger.info(f"Choices size: {len(result.choices)}")
         assert_that(len(result.choices)).is_equal_to(1)
-
         message: ChatCompletionOutputMessage = result.choices[0].message
-
         # Assertions break from here
-        # assert_that(message.tool_calls).is_not_none()
-        # assert_that(
-        #     message.tool_calls[0].function.description
-        # ).is_equal_to(PlusTool.description)
-        # assert_that(message.content).is_not_none()
-        # assert_that(message.content).contains("4")
+        assert_that(message.tool_calls).is_not_none()
+        assert_that(
+            message.tool_calls[0].function.description
+        ).is_equal_to(PlusTool.description)
+        assert_that(message.content).is_not_none()
+        assert_that(message.content).contains("4")
 
     @staticmethod
     @mark.asyncio
@@ -194,4 +192,3 @@ class TestTools:
             delta = chunk.choices[0].delta.content or ""
             content_multiply += delta
         logger.info(f"result multiply: {content_plus}")
-
